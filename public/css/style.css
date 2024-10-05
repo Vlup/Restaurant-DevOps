@@ -1,0 +1,55 @@
+*,
+html, 
+body{
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family:'Times New Roman', Times, serif;
+}
+
+:root {
+    --bg-primary: rgb(10, 107, 210);
+    --bg-secondary: rgb(126, 202, 249);
+    --txt-primary: #f7f7f7;
+    --txt-secondary: #222222;
+}
+
+.bg-prim{
+    background-color: var(--bg-primary);
+}
+
+.bg-secon{
+    background-color: var(--bg-secondary);
+}
+
+.txt-prim{
+    color: var(--txt-primary);
+}
+
+.absolute-bottom {
+    bottom: 20px;
+}
+
+.modal{
+    width: 350px;
+}
+
+.h-215{
+    height: 215px;
+}
+
+.me-15{
+    margin-right: 60px !important;
+}
+
+.pagination .page-item .page-link{
+    padding: 5px 15px !important;
+    font-size: 20px;
+}
+
+.modal {
+    display: none;
+}
+
+.display-block{
+    display: block !important;
+}
