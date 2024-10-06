@@ -3,7 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\PreventAdmin;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,8 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->redirectUsersTo(function(Request $request) {
+            return $request->user()->is_admin ? '/admin/menus' : '/';
+        });
         $middleware->alias([
-            'admin' => IsAdmin::class
+            'admin' => IsAdmin::class,
+            'non-admin' => PreventAdmin::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

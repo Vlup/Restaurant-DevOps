@@ -2,25 +2,25 @@
     <div class="position-sticky pt-3">
         <ul class="nav flex-column px-4">
             <li class="nav-item mb-3">
-                <a class="nav-link {{ Request::is('profile*') ? 'active' : '' }}" aria-current="page" href="/profile">
+                <a class="nav-link {{ Request::is('admin/admin*') ? 'active' : '' }}" aria-current="page" href="/admin/admin">
                     <span data-feather="user"></span>
-                    Profile
+                    Admin
                 </a>
             </li>
             <li class="nav-item mb-3">
-                <a class="nav-link {{ Request::is('/', 'menus*')? 'active' : '' }}" href="/">
+                <a class="nav-link {{ Request::is('admin/menus', 'admin/menus*')? 'active' : '' }}" href="/admin/menus">
                     <span data-feather="book-open"></span>
                     Menu
                 </a>
             </li>
             <li class="nav-item mb-3">
-                <a class="nav-link" href="/adminOrder">
+                <a class="nav-link {{ Request::is('admin/order', 'admin/order*')? 'active' : '' }}" href="admin/order">
                     <span data-feather="file-text"></span>
                     Pesanan
                 </a>
             </li>
             <li class="nav-item mb-3">
-                <a class="nav-link" href="/logout">
+                <a class="nav-link {{ Request::is('admin/sales', 'admin/sales*')? 'active' : '' }}" href="admin/sales">
                     <span data-feather="shopping-bag"></span>
                     Penjualan
                 </a>

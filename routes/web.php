@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AdminMenuController;
 use App\Http\Controllers\MenuController;
 
 // Main Application
@@ -10,18 +11,18 @@ Route::get('login', function () {
     return view('login.index', [
         'title' => 'Login'
     ]);
-})->middleware('guest');
+})->name('login')->middleware('guest');
 
 Route::get('register', function () {
     return view('register.index', [
         'title' => 'Register'
     ]);
-})->middleware('guest');
+})->name('register')->middleware('guest');
 
 Route::post('register', [AuthController::class, 'register'])->middleware('guest');
 Route::post('login', [AuthController::class, 'login'])->middleware('guest');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'non-admin'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::get('/', [MenuController::class, 'index']);
@@ -35,20 +36,23 @@ Route::prefix('admin')->group(function (){
         return view('admin.login', [
             'title' => 'Login'
         ]);
-    });
+    })->middleware('guest');
 
     Route::post('login', [AdminAuthController::class, 'login'])->middleware('guest');
 
     Route::middleware('admin')->group(function () {
-        Route::get('register', function () {
-            return view('admin.register', [
-                'title' => 'Register'
+        Route::get('/', function () {
+            return view('admin.blank', [
+                'title' => 'Admin'
             ]);
         });
+
+        Route::get('admin', [AdminAuthController::class, 'index']);
 
         Route::post('register', [AdminAuthController::class, 'register']);
         Route::post('logout', [AdminAuthController::class, 'logout']);
 
+        Route::get('menus', [AdminMenuController::class, 'index']);
         Route::post('menus', [MenuController::class, 'store']);
     });
 });

@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminAuthController extends Controller
 {
+    public function index()
+    {
+        $title = 'Admin Management';
+        $admins = User::select('name', 'email')
+            ->where('is_admin', true)
+            ->orderBy('name')
+            ->paginate(8);
+            
+        return view('admin.admin', compact('title', 'admins'));
+    }
+
     public function register(Request $request)
     {
         try {
@@ -21,10 +32,10 @@ class AdminAuthController extends Controller
             $input = validator($request->all(), $rules)->validated();
             $input['password'] = Hash::make($input['password']);
             $input['is_admin'] = true;
-    
+
             User::create($input);
     
-            return redirect('/login')->with('success', 'Registration successful! Please login.');
+            return redirect()->back()->with('success', 'Registration successful!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -42,7 +53,7 @@ class AdminAuthController extends Controller
 
             if ($user->is_admin) {
                 $request->session()->regenerate();
-                return redirect()->intended('/');
+                return redirect()->intended('/admin/menus');
             }
 
             Auth::logout();
