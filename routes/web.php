@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BasketController;
+use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\OrderUserController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminMenuController;
 use App\Http\Controllers\MenuController;
@@ -22,15 +25,26 @@ Route::get('register', function () {
 Route::post('register', [AuthController::class, 'register'])->middleware('guest');
 Route::post('login', [AuthController::class, 'login'])->middleware('guest');
 
+//User Side
 Route::middleware(['auth', 'non-admin'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::get('/', [MenuController::class, 'index']);
     Route::get('profile', [AuthController::class, 'profile']);
+
+    Route::resource('/baskets', BasketController::class)->except('create', 'show', 'edit','destroy', 'update');
+    Route::post('/basket/{id}', [BasketController::class, 'update']);
+    Route::delete('/basket/{id}', [BasketController::class, 'detach']);
+    Route::delete('/baskets', [BasketController::class, 'delete']);
+
+    Route::get('/order', [OrderUserController::class, 'index']);
+    Route::post('/order', [OrderUserController::class, 'store']);
+    
+    Route::get('/history', [HistoryController::class, 'index']);
 });
 
 
-//Admin Side Application
+//Admin Side
 Route::prefix('admin')->group(function (){
     Route::get('login', function () {
         return view('admin.login', [

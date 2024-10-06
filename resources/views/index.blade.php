@@ -43,7 +43,7 @@
                                         <div class="modal-body py-2">
                                             <label for="qty">Jumlah:</label>
                                             <input type="number" id="qty-{{ $menu->id }}" name="qty" min="1" step="1" class="d-inline form-control w-25 p-1" value="1" onchange="addPrice(this, {{ $menu->price }})">
-                                            <label class="d-block mt-2" for="price" id="priceLabel-qty-{{ $menu->id }}">Harga: Rp. {{ $menu->price }}</label>
+                                            <label class="d-block mt-2" for="price" id="priceLabel-qty-{{ $menu->id }}">Harga: Rp. {{ number_format($menu->price) }}</label>
                                             <input type="hidden" id="price-qty-{{ $menu->id }}" name="price">
                                         </div>
                                         <div class="modal-footer py-1">
@@ -110,11 +110,17 @@
     <script>
         const name = document.querySelector('#add_name');
 
+        function numberFormat(number) {
+            const roundedNumber = Math.round(number).toString();
+            const formattedNumber = roundedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return formattedNumber;
+        }
+
         function addPrice(e, p) {
             const priceLabel = document.querySelector(`#priceLabel-${e.id}`);
             const price = document.querySelector(`#price-${e.id}`);
 
-            priceLabel.innerHTML = 'Harga: Rp. ' + p * e.value;
+            priceLabel.innerHTML = 'Harga: Rp. ' + numberFormat(p * e.value);
             price.value = p * e.value;
         }
 

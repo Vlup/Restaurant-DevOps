@@ -16,13 +16,13 @@
             <li class="nav-item mb-3">
                 <a class="nav-link {{ Request::is('baskets') ? 'active' : '' }}" href="/baskets">
                     <span data-feather="shopping-cart"></span>
-                    Keranjang
+                    Basket
                 </a>
             </li>
             <li class="nav-item mb-3">
                 <a class="nav-link" href="/order">
                     <span data-feather="file-text"></span>
-                    Pesanan
+                    Order
                 </a>
             </li>
             <li class="nav-item mb-3">

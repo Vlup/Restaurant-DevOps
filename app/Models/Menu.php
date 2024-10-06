@@ -26,4 +26,9 @@ class Menu extends Model
             $model->id = (string) Str::uuid();
         });
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'baskets', 'menu_id', 'user_id')->withTimestamps()->withPivot(['qty'])->as('basket');
+    }
 }

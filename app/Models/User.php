@@ -46,4 +46,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function menus()
+    {
+        return $this->belongsToMany(Menu::class, 'baskets', 'user_id', 'menu_id')->withTimestamps()->withPivot(['qty'])->orderBy('pivot_created_at','asc')->as('basket');
+    }
 }
