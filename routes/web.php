@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\HistoryController;
-use App\Http\Controllers\OrderUserController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminMenuController;
+use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\MenuController;
 
 // Main Application
@@ -37,8 +38,8 @@ Route::middleware(['auth', 'non-admin'])->group(function () {
     Route::delete('/basket/{id}', [BasketController::class, 'detach']);
     Route::delete('/baskets', [BasketController::class, 'delete']);
 
-    Route::get('/order', [OrderUserController::class, 'index']);
-    Route::post('/order', [OrderUserController::class, 'store']);
+    Route::get('/order', [OrderController::class, 'index']);
+    Route::post('/order', [OrderController::class, 'store']);
     
     Route::get('/history', [HistoryController::class, 'index']);
 });
@@ -68,5 +69,10 @@ Route::prefix('admin')->group(function (){
 
         Route::resource('/menus', AdminMenuController::class)->except('create', 'show');
         Route::patch('/menus/{id}/enable', [AdminMenuController::class, 'isEnable']);
+
+        Route::get('/order', [AdminOrderController::class, 'index']);
+        Route::patch('/order-accept/{id}', [AdminOrderController::class, 'accept']);
+        Route::patch('/order-decline/{id}', [AdminOrderController::class, 'decline']);
+        Route::patch('/order-done/{id}', [AdminOrderController::class, 'complete']);
     });
 });

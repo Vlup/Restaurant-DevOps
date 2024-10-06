@@ -1,3 +1,8 @@
+@php
+use App\Enums\OrderStatus;
+use App\Enums\OrderType;
+@endphp
+
 @extends('layouts.main')
 
 @section('sidebar')
@@ -7,10 +12,10 @@
 @section('container')
 <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="container my-5 mx-3">
-        <h1 class="mb-4">History Pemesanan</h1>
+        <h1 class="mb-4">History</h1>
         @php($found = false)
         @foreach ($orders as $order)
-            @if ($order->status == 'completed' || $order->status == 'canceled')
+            @if (in_array($order->status, [OrderStatus::COMPLETED, OrderStatus::DECLINED])) 
                 @php($found = true)
             @endif
         @endforeach
@@ -20,10 +25,10 @@
             </div>
         @else
             @foreach ($orders as $order)
-                @if ($order->status == 'completed' || $order->status == 'canceled')      
-                    <div class="border border-5 border-warning mt-3 p-3 py-4 col-md-7 col-lg-10 position-relative">
+                @if (in_array($order->status, [OrderStatus::COMPLETED, OrderStatus::DECLINED]))      
+                    <div class="border border-5 border-warning mt-3 p-3 pt-4 col-md-7 col-lg-10 position-relative">
                         @foreach ($order->menus as $menu)
-                            <span class="position-absolute top-0 start-50 translate-middle badge @if($order->status == 'canceled') bg-danger @else bg-success @endif px-5 py-2 fs-6">{{ ucwords($order->status) }}</span>
+                            <span class="position-absolute top-0 start-50 translate-middle badge @if($order->status == OrderStatus::DECLINED) bg-danger @else bg-success @endif px-5 py-2 fs-6">{{ ucwords($order->status) }}</span>
                             <div class="d-flex justify-content-between mb-2">
                                 <div>
                                     <h5 class="d-inline">{{ $menu->name }}</h5>
@@ -41,6 +46,14 @@
                             </div>
                             <div>
                                 <h5>Rp. {{ number_format($order->total) }}</h5>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <div>
+                                <h5 class="mt-1">Type</h5>
+                            </div>
+                            <div class="alert alert-primary w-25 text-center">
+                                <p>{{OrderType::getDescription($order->type)}}</h5>
                             </div>
                         </div>
                     </div>

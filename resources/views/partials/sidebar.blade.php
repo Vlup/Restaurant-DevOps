@@ -16,7 +16,7 @@
             <li class="nav-item mb-3">
                 <a class="nav-link {{ Request::is('baskets') ? 'active' : '' }}" href="/baskets">
                     <span data-feather="shopping-cart"></span>
-                    Basket
+                    Cart
                 </a>
             </li>
             <li class="nav-item mb-3">

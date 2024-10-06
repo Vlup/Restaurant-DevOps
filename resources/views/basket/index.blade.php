@@ -1,3 +1,7 @@
+@php
+use App\Enums\OrderType;
+@endphp
+
 @extends('layouts.main')
 
 @section('sidebar')
@@ -51,7 +55,7 @@
                                     @csrf
                                     <div class="row g-3 align-items-center">
                                         <div class="col-auto">
-                                            <label for="qty" class="col-form-label">Jumlah:</label>
+                                            <label for="qty" class="col-form-label">Total:</label>
                                         </div>
                                         <div class="col-3 ms-2">
                                             <input type="number" id="qty" name="qty" class="form-control px-2 py-1 border-1" min="1" required value="{{ $menu->basket->qty }}">
@@ -61,7 +65,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                <p>Harga: Rp. {{ number_format($menu->price * $menu->basket->qty) }}</p>
+                                <p>Price: Rp. {{ number_format($menu->price * $menu->basket->qty) }}</p>
                                 
                                 <form action="/basket/{{ $menu->id }}" class="position-absolute top-0 end-0" method="post">
                                     @csrf
@@ -74,36 +78,54 @@
                 </div>         
             @endforeach
             <hr class="border border-danger border-2 opacity-100">
+            <form action="/order" method="POST" class="d-flex flex-column-reverse">
+                @csrf
 
-            <div class="border border-2 mt-3 p-3 col-md-7 col-lg-10">
-                @foreach ($baskets->menus as $menu)
-                    <div class="d-flex justify-content-between mb-2">
+                <div class="border border-2 mt-3 p-3 col-md-7 col-lg-10">
+                    <div class="alert alert-primary p-1 mb-2">
+                        <h4>Choose Your Order Type</h4>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input me-2 mt-1" type="radio" name="type" id="dine-in" value="{{OrderType::DINE_IN}}">
+                            <label class="form-check-label" for="dine-in">
+                                <h5 class="text-black">Dine In</h5>
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input me-2 mt-1" type="radio" name="type" id="take-away" value="{{OrderType::TAKE_AWAY}}">
+                            <label class="form-check-label" for="take-away">
+                                <h5 class="text-black">Take Away</h5>
+                            </label>
+                        </div>
+                    </div> 
+                    
+                    @foreach ($baskets->menus as $menu)
+                        <div class="d-flex justify-content-between mb-2">
+                            <div>
+                                <h5>{{ $menu->name }}</h5>
+                            </div>
+                            <div>
+                                <h5>Rp. {{ number_format($menu->price * $menu->basket->qty) }}</h5>
+                                @php($total = $total + ($menu->price * $menu->basket->qty))
+                            </div>
+                        </div>
+                    @endforeach
+                    <hr class="border border-warning border-2 opacity-100">
+                    <div class="d-flex justify-content-between mt-2">
                         <div>
-                            <h5>{{ $menu->name }}</h5>
+                            <h5 class="mb-1">Total</h5>
                         </div>
                         <div>
-                            <h5>Rp. {{ number_format($menu->price * $menu->basket->qty) }}</h5>
-                            @php($total = $total + ($menu->price * $menu->basket->qty))
+                            <h5>Rp. {{ number_format($total) }}</h5>
                         </div>
                     </div>
-                @endforeach
-                <hr class="border border-warning border-2 opacity-100">
-                <div class="d-flex justify-content-between mt-2">
-                    <div>
-                        <h5 class="mb-1">Total</h5>
-                    </div>
-                    <div>
-                        <h5>Rp. {{ number_format($total) }}</h5>
-                    </div>
-                </div>
-                <form action="/order" method="POST" class="d-flex flex-column-reverse">
-                    @csrf
+
                     @foreach ($baskets->menus as $menu)
                         <input type="hidden" name="menus[]" value="{{ $menu->id }}">
                         <input type="hidden" name="qty[]" value="{{ $menu->basket->qty }}">
                     @endforeach
                     <input type="hidden" name="total" value="{{ $total }}">
-                    <button type="submit" class="btn btn-primary px-2 py-1 mt-2 fs-5" onclick="return confirm('Are you sure you want to order? You won\'t be able to cancel after you order')">Order</button>
+                    
+                    <button type="submit" class="btn btn-primary px-2 py-1 mt-2 fs-5 w-100" onclick="return confirm('Are you sure you want to order? You won\'t be able to cancel after you order')">Order</button>
                 </form>
             </div>
         @endif

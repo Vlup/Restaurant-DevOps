@@ -16,13 +16,13 @@
             <li class="nav-item mb-3">
                 <a class="nav-link {{ Request::is('admin/order', 'admin/order*')? 'active' : '' }}" href="order">
                     <span data-feather="file-text"></span>
-                    Pesanan
+                    Order
                 </a>
             </li>
             <li class="nav-item mb-3">
                 <a class="nav-link {{ Request::is('admin/sales', 'admin/sales*')? 'active' : '' }}" href="sales">
                     <span data-feather="shopping-bag"></span>
-                    Penjualan
+                    Sales
                 </a>
             </li>
         </ul>

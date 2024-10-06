@@ -25,13 +25,13 @@
                         <p class="card-text p-2">{{ $menu->description }}</p>
                     </div>
                     <ul class="list-group list-group-flush ">
-                        <li class="list-group-item py-2 border-warning px-3">Harga: Rp. {{number_format($menu->price)}}</li>
-                        <li class="list-group-item py-2 px-3">Status: <p class="d-inline-flex align-items-baseline">Tersedia<span class="d-block badge bg-success p-1 ms-2 position-absolute start-50" data-feather="check-circle"></span></p></li>
+                        <li class="list-group-item py-2 border-warning px-3">Price: Rp. {{number_format($menu->price)}}</li>
+                        <li class="list-group-item py-2 px-3">Status: <p class="d-inline-flex align-items-baseline">Available<span class="d-block badge bg-success p-1 ms-2 position-absolute end-0 me-2" data-feather="check-circle"></span></p></li>
                     </ul>
                     <div class="card-body text-center py-2">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-warning p-1" data-bs-toggle="modal" data-bs-target="#addToBasket-{{ $menu->id }}">
-                            Tambah ke keranjang
+                            Add To Cart
                         </button>
                         <!-- Modal -->
                         <div class="modal fade modal-dialog-centered position-absolute start-0 top-100 w-100 h-25" id="addToBasket-{{ $menu->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addToBasketLabel" aria-hidden="true">
@@ -41,9 +41,9 @@
                                         @csrf
                                         <input type="hidden" name="menu_id" value="{{ $menu->id }}" >
                                         <div class="modal-body py-2">
-                                            <label for="qty">Jumlah:</label>
+                                            <label for="qty">Total:</label>
                                             <input type="number" id="qty-{{ $menu->id }}" name="qty" min="1" step="1" class="d-inline form-control w-25 p-1" value="1" onchange="addPrice(this, {{ $menu->price }})">
-                                            <label class="d-block mt-2" for="price" id="priceLabel-qty-{{ $menu->id }}">Harga: Rp. {{ number_format($menu->price) }}</label>
+                                            <label class="d-block mt-2" for="price" id="priceLabel-qty-{{ $menu->id }}">Price: Rp. {{ number_format($menu->price) }}</label>
                                             <input type="hidden" id="price-qty-{{ $menu->id }}" name="price">
                                         </div>
                                         <div class="modal-footer py-1">
@@ -68,13 +68,13 @@
                         <p class="card-text p-2">{{ $menu->description }}</p>
                     </div>
                     <ul class="list-group list-group-flush ">
-                        <li class="list-group-item py-2 border-warning px-3">Harga: Rp. @convert($menu->price)</li>
-                        <li class="list-group-item py-2 px-3">Status: <p class="d-inline-flex align-items-baseline">Tidak Tersedia<span class="d-block badge bg-danger p-1 position-absolute end-0 me-15" data-feather="x-circle"></span></p></li>
+                        <li class="list-group-item py-2 border-warning px-3">Price: Rp. {{ number_format($menu->price) }}</li>
+                        <li class="list-group-item py-2 px-3">Status: <p class="d-inline-flex align-items-baseline">Unavailable<span class="d-block badge bg-danger p-1 position-absolute end-0 me-2" data-feather="x-circle"></span></p></li>
                     </ul>
                     <div class="card-body text-center py-2">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-warning p-1" data-bs-toggle="modal" data-bs-target="#addToBasket-{{ $menu->id }}" disabled>
-                            Tambah ke keranjang
+                            Add To Cart
                         </button>
                         <!-- Modal -->
                         <div class="modal fade modal-dialog-centered position-absolute start-0 top-100 w-100 h-25" id="addToBasket-{{ $menu->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addToBasketLabel" aria-hidden="true">
@@ -83,9 +83,9 @@
                                     <form action="" method="post">
                                         @csrf
                                         <div class="modal-body py-2">
-                                            <label for="qty">Jumlah:</label>
+                                            <label for="qty">Total:</label>
                                             <input type="number" id="qty-{{ $menu->id }}" name="qty" min="1" step="1" class="d-inline form-control w-25 p-1" value="1" onchange="addPrice(this, {{ $menu->price }})">
-                                            <label class="d-block mt-2" for="price" id="priceLabel-qty-{{ $menu->id }}">Harga: Rp. {{ $menu->price }}</label>
+                                            <label class="d-block mt-2" for="price" id="priceLabel-qty-{{ $menu->id }}">Price: Rp. {{ $menu->price }}</label>
                                             <input type="hidden" id="price-qty-{{ $menu->id }}" name="price">
                                         </div>
                                         <div class="modal-footer py-1">

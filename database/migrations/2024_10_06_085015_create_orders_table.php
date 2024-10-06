@@ -15,7 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->unsignedBigInteger('user_id');
             $table->integer('total', false, true);
-            $table->string('status')->default('pending');
+            $table->string('status')->default('PENDING');
+            $table->string('type');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;
