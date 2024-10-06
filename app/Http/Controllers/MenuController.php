@@ -16,27 +16,4 @@ class MenuController extends Controller
             'types' => MenuType::toSelectOption(),
         ]);
     }
-
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'description' => 'required|max:255',
-            'type' => 'required|string',
-            'price' => 'required|numeric|min:500',
-            'image' => 'image|file|max:2048',
-            'tag' => 'required|string'
-        ]);
-
-        //integrate firebase
-        // if($request->file('image')) {
-        //     $validatedData['image'] = $request->file('image')->store('menu-images');
-        // }
-
-        $validatedData['enable'] = true;
-
-        Menu::create($validatedData); 
-
-        return redirect('/')->with('success', 'New Menu has been added!');
-    }
 }

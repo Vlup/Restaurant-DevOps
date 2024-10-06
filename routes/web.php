@@ -52,7 +52,7 @@ Route::prefix('admin')->group(function (){
         Route::post('register', [AdminAuthController::class, 'register']);
         Route::post('logout', [AdminAuthController::class, 'logout']);
 
-        Route::get('menus', [AdminMenuController::class, 'index']);
-        Route::post('menus', [MenuController::class, 'store']);
+        Route::resource('/menus', AdminMenuController::class)->except('create', 'show');
+        Route::patch('/menus/{id}/enable', [AdminMenuController::class, 'isEnable']);
     });
 });

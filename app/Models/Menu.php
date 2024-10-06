@@ -12,6 +12,13 @@ class Menu extends Model
 
     protected $guarded = ['id'];
 
+    protected function casts(): array
+    {
+        return [
+            'id' => 'string',
+        ];
+    }
+
     public static function boot()
     {
         parent::boot();

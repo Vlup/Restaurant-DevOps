@@ -14,20 +14,20 @@
                 </a>
             </li>
             <li class="nav-item mb-3">
-                <a class="nav-link {{ Request::is('admin/order', 'admin/order*')? 'active' : '' }}" href="admin/order">
+                <a class="nav-link {{ Request::is('admin/order', 'admin/order*')? 'active' : '' }}" href="order">
                     <span data-feather="file-text"></span>
                     Pesanan
                 </a>
             </li>
             <li class="nav-item mb-3">
-                <a class="nav-link {{ Request::is('admin/sales', 'admin/sales*')? 'active' : '' }}" href="admin/sales">
+                <a class="nav-link {{ Request::is('admin/sales', 'admin/sales*')? 'active' : '' }}" href="sales">
                     <span data-feather="shopping-bag"></span>
                     Penjualan
                 </a>
             </li>
         </ul>
     </div>
-    <form action="/logout" method="post" class="px-4">
+    <form action="/admin/logout" method="post" class="px-4">
         @csrf
         <button type="submit" class="nav-link position-absolute absolute-bottom border-0"><span data-feather="log-out"></span> Logout</button>
     </form>

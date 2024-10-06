@@ -1,3 +1,7 @@
+@php
+use App\Enums\MenuType;    
+@endphp
+
 @extends('layouts.main')
 
 @section('sidebar')
@@ -58,6 +62,12 @@
                             <input type="number" class="form-control p-1" id="price" name="price" required min="3">
                         </div>
                     </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input me-1 mt-1" type="checkbox" value="true" id="enable" name="enable" checked>
+                        <label class="form-check-label mb-1" for="enable">
+                          Available
+                        </label>
+                    </div>
                     <div class="mb-2">
                         <label for="image" class="form-label">Image</label>
                         <img class="img-preview img-fluid mb-2 col-sm-5">
@@ -86,7 +96,7 @@
                         <tr>
                         <td>{{ $loop->iteration }}.</td>
                         <td>{{ $menu->name }}</td>
-                        <td>{{ $menu->type }}</td>
+                        <td>{{ MenuType::getDescription($menu->type) }}</td>
                         <td class="col-md-2">Rp. {{number_format($menu->price)}}</td>
                         <td class="col-md-2">
                             @if ($menu->enable)
@@ -96,17 +106,17 @@
                             @endif
                         </td>
                         <td class="col-md-2">
-                            <a href="/menus/{{ $menu->id }}/edit" class="badge bg-warning" ><span data-feather="edit" class="p-1"></span></a>
-                            <form action="/menus/{{ $menu->id }}/is-available" method="post" class="d-inline">
+                            <a href="/admin/menus/{{ $menu->id }}/edit" class="badge bg-warning" ><span data-feather="edit" class="p-1"></span></a>
+                            <form action="/admin/menus/{{ $menu->id }}/enable" method="post" class="d-inline">
                                 @method('patch')
                                 @csrf
-                                @if (!$menu->stock)
+                                @if (!$menu->enable)
                                     <button class= "badge bg-success border-0" onclick="return confirm('Do you want to make this menu available?')"><span data-feather="check-circle" class="p-1"></span></button>
                                 @else
                                     <button class= "badge bg-danger border-0" onclick="return confirm('Do you want to make this menu unavailable?')"><span data-feather="x-circle" class="p-1"></span></button>
                                 @endif
                             </form>
-                            <form action="/menus/{{ $menu->id }}" method="post" class="d-inline">
+                            <form action="/admin/menus/{{ $menu->id }}" method="post" class="d-inline">
                                 @method('delete')
                                 @csrf
                                 <button class="badge bg-danger border-0" onclick="return confirm('Do you want to delete this menu?')"><span data-feather="trash-2" class="p-1"></span></button>

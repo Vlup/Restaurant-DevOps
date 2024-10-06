@@ -11,67 +11,86 @@ class AdminMenuController extends Controller
 {
     public function index()
     {
-        return view('admin.menu', [
+        return view('admin.menu.index', [
             'title' => 'Menu Management',
             'menus' => Menu::orderBy('name')->paginate(8),
             'types' => MenuType::toSelectOption(),
         ]);
     }
 
-    public function register(Request $request)
+    public function edit(string $id)
     {
-        try {
-            $rules = [
-                'name' => 'required|max:255',
-                'email' => 'required|email:dns|unique:users',
-                'password' => 'required|min:8|max:255|confirmed'
-            ];
-    
-            $input = validator($request->all(), $rules)->validated();
-            $input['password'] = Hash::make($input['password']);
-            $input['is_admin'] = true;
-    
-            User::create($input);
-    
-            return redirect('/login')->with('success', 'Registration successful! Please login.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $title = 'Menu Management';
+        $menu = Menu::findOrFail($id);
+        $types = MenuType::toSelectOption();
+        return view('admin.menu.edit', compact('title', 'menu', 'types'));
     }
 
-    public function login(Request $request)
+    public function store(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required|max:255',
+            'type' => 'required|string',
+            'price' => 'required|numeric|min:500',
+            'image' => 'image|file|max:2048',
+            'tag' => 'required|string',
+            'enable' => 'nullable'
         ]);
 
-        if(Auth::attempt($credentials)) {
-            $user = Auth::user();
+        //integrate firebase
+        // if($request->file('image')) {
+        //     $validatedData['image'] = $request->file('image')->store('menu-images');
+        // }
+        $validatedData['enable'] = isset($validatedData['enable']);
 
-            if ($user->is_admin) {
-                $request->session()->regenerate();
-                return redirect()->intended('/admin/menus');
-            }
+        Menu::create($validatedData); 
 
-            Auth::logout();
-        }
-
-        return back()->with('error', 'Login failed!');
+        return redirect('/admin/menus')->with('success', 'New Menu has been added!');
     }
 
-    public function logout(Request $request){
-        Auth::logout();
-
-        $request->session()->invalidate();
-        
-        $request->session()->regenerateToken();
-
-        return redirect('/login');
-    }
-
-    public function profile()
+    public function update(Request $request, string $id)
     {
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required|max:255',
+            'type' => 'required|string',
+            'price' => 'required|numeric|min:500',
+            'image' => 'image|file|max:2048',
+            'tag' => 'required|string',
+            'enable' => 'nullable'
+        ]);
 
+        $validatedData['enable'] = isset($validatedData['enable']);
+
+        Menu::where('id', $menu->id)
+                ->update($validatedData);
+
+        return redirect('/admin/menus')->with('success', 'Menu has been updated');
+    }
+
+    public function isEnable(string $id)
+    {
+        $menu = Menu::findOrFail($id);
+        
+        if($menu->enable){
+            $menu->enable = false;
+        } else {
+            $menu->enable = true;
+        }
+        $menu->save();
+        return redirect('/admin/menus')->with('success', 'Menu has been updated');
+    }
+
+    public function destroy(string $id)
+    {
+        $menu = Menu::findOrFail($id);
+
+        // if($menu->image) {
+        //     Storage::delete($menu->image);
+        // }
+
+        $menu->delete();
+        return redirect('/admin/menus')->with('success', 'Menu has been deleted!');
     }
 }

@@ -1,11 +1,7 @@
 @extends('layouts.main')
 
 @section('sidebar')
-    @if(auth()->user()->is_admin)
-        @include('partials.adminSidebar')    
-    @else
-        @include('partials.sidebar')        
-    @endif
+    @include('partials.adminSidebar')    
 @endsection
 
 @section('container')
@@ -13,23 +9,43 @@
     <div class="container my-5 mx-3">
         <h1 class="mb-3">Edit Menu</h1>
         
-        <form action="/menus/{{ $menu->slug }}" method="post" enctype="multipart/form-data" class="me-4">
+        <form action="/menus/{{ $menu->id }}" method="post" enctype="multipart/form-data" class="me-4">
             @method('put')
             @csrf
             <div class="mb-2">
                 <label for="add_name" class="form-label">Nama</label>
                 <input type="text" class="form-control p-1" id="add_name" name="name" value="{{ old('name', $menu->name) }}" required>
             </div>
-            <input type="hidden" id="add_slug" name="slug" value="{{ old('name', $menu->name) }}" required> 
+            <div class="mb-2">
+                <label for="tag" class="form-label">Tags</label>
+                <input type="text" class="form-control p-1" id="tag" name="tag" value="{{ old('tag', $menu->tag) }}" required>
+            </div>
             <div class="mb-2">
                 <label for="description" class="form-label">Deskripsi</label>
                 <input type="text" class="form-control p-1" id="description" name="description" value="{{ old('description', $menu->description) }}"  required>
             </div>
             <div class="mb-2">
+                <label for="type" class="form-label">Tipe</label>
+                <select class="form-select p-1" aria-label="Default select example" name="type" id='type' required>
+                    @foreach ($types as $type)
+                        @if ($menu->type === $type)
+                            <option value="{{ $type['id'] }}" selected>{{ $type['value'] }}</option>
+                        @else
+                            <option value="{{ $type['id'] }}">{{ $type['value'] }}</option>
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+            <div class="mb-2">
                 <label for="price" class="form-label">Harga</label>
                 <input type="number" class="form-control p-1" id="price" name="price" value="{{ old('price', $menu->price) }}"  required min="3">
             </div>
-            <input type="hidden" name="stock" value="{{ $menu->stock }}">
+            <div class="form-check mb-2">
+                <input class="form-check-input me-1 mt-1" type="checkbox" value="true" id="enable" name="enable" @if($menu->enable)checked @endif>
+                <label class="form-check-label mb-1" for="enable">
+                  Available
+                </label>
+            </div>
             <div class="mb-2">
                 <label for="image" class="form-label">Image</label>
                 @if ($menu->image)
@@ -47,13 +63,6 @@
 
 <script>
     const name = document.querySelector('#add_name');
-    const slug = document.querySelector('#add_slug');
-    
-    name.addEventListener('change', () => {
-        fetch('/menus/checkSlug?name=' + name.value)
-        .then(response => response.json())
-        .then(data => slug.value = data.slug)
-    })
 
     function previewImage() {
     const image = document.querySelector('#image');
