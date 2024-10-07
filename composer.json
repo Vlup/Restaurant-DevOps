@@ -7,6 +7,9 @@
     "require": {
         "php": "^8.2",
         "bensampo/laravel-enum": "^6.11",
+        "firebase/php-jwt": "^6.10",
+        "kreait/firebase-php": "^7.15",
+        "kreait/laravel-firebase": "^5.9",
         "laravel/framework": "^11.9",
         "laravel/passport": "*",
         "laravel/tinker": "^2.9"

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Enums\MenuType;
+use Illuminate\Http\Request;
+use Kreait\Firebase\Storage\Bucket;
 
 class AdminMenuController extends Controller
 {
@@ -33,15 +34,16 @@ class AdminMenuController extends Controller
             'description' => 'required|max:255',
             'type' => 'required|string',
             'price' => 'required|numeric|min:500',
-            'image' => 'image|file|max:2048',
+            'image' => 'image|file',
             'tag' => 'required|string',
             'enable' => 'nullable'
         ]);
 
-        //integrate firebase
-        // if($request->file('image')) {
-        //     $validatedData['image'] = $request->file('image')->store('menu-images');
-        // }
+        $file = $request->file('image');
+        $image = $this->uploadFile($file);
+
+        $validatedData['image_url'] = $image['url'];
+        $validatedData['image_path'] = $image['path'];
         $validatedData['enable'] = isset($validatedData['enable']);
 
         Menu::create($validatedData); 
@@ -58,12 +60,23 @@ class AdminMenuController extends Controller
             'price' => 'required|numeric|min:500',
             'image' => 'image|file|max:2048',
             'tag' => 'required|string',
-            'enable' => 'nullable'
+            'enable' => 'nullable',
+            'image_path' => 'nullable|string',
         ]);
 
+        if ($request->file('image')) {
+            if (isset($validatedData['old_image'])) {
+                $this->deleteFile();
+            }
+            $image = $this->uploadFile($request->file('image'));
+            $validatedData['image_path'] = $image['path'];
+            $validatedData['image_url'] = $image['url'];
+        }
+        
+        unset($validatedData['image']);
         $validatedData['enable'] = isset($validatedData['enable']);
 
-        Menu::where('id', $menu->id)
+        Menu::where('id', $id)
                 ->update($validatedData);
 
         return redirect('/admin/menus')->with('success', 'Menu has been updated');
@@ -86,11 +99,42 @@ class AdminMenuController extends Controller
     {
         $menu = Menu::findOrFail($id);
 
-        // if($menu->image) {
-        //     Storage::delete($menu->image);
-        // }
+        if($menu->image_path) {
+            $this->deleteFile($menu->image_path);
+        }
 
         $menu->delete();
         return redirect('/admin/menus')->with('success', 'Menu has been deleted!');
+    }
+
+    public function uploadFile($file)
+    {
+        $firebase = app('firebase.storage');
+        $storage = $firebase->getBucket();
+
+        $storagePath = 'new_food/';
+        $filename = now()->setTimezone('Asia/Jakarta')->format('Y-m-d-H:i:s') . '-' . $file->getClientOriginalName();
+
+        $upload = $storage->upload(
+            fopen($file->getRealPath(), 'r'),
+            [
+                'predefinedAcl' => 'publicRead',
+                'name' => $storagePath . $filename,
+            ]
+        );
+
+        return [
+            'path' => $storagePath . '' . $filename, 
+            'url' => $upload->info()['mediaLink']
+        ];
+    }
+
+    public function deleteFile($filePath)
+    {
+        $firebase = app('firebase.storage');
+        $storage = $firebase->getBucket();
+
+        $image = $storage->object($filePath);
+        $image->delete();
     }
 }

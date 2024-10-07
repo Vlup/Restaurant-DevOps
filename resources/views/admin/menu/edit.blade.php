@@ -9,7 +9,7 @@
     <div class="container my-5 mx-3">
         <h1 class="mb-3">Edit Menu</h1>
         
-        <form action="/menus/{{ $menu->id }}" method="post" enctype="multipart/form-data" class="me-4">
+        <form action="/admin/menus/{{ $menu->id }}" method="post" enctype="multipart/form-data" class="me-4">
             @method('put')
             @csrf
             <div class="mb-2">
@@ -47,15 +47,17 @@
                 </label>
             </div>
             <div class="mb-2">
-                <label for="image" class="form-label">Image</label>
-                @if ($menu->image)
-                    <input type="hidden" value="{{ $menu->image }}" name="oldImage">
-                    <img src="{{ asset('storage/' . $menu->image) }}" class="img-preview img-fluid mb-2 col-sm-5">
+                <div class="mb-2">
+                    <label for="image" class="form-label">Image</label>
+                </div>
+                @if ($menu->image_url)
+                    <input type="hidden" value="{{ $menu->image_path }}" name="image_path">
+                    <img src="{{ $menu->image_url }}" class="img-preview img-fluid mb-2 col-sm-5">
                 @else
                     <img class="img-preview img-fluid mb-2 col-sm-5">
                 @endif
                 <input class="form-control p-1" type="file" id="image" name="image" onchange="previewImage()">
-            </div>
+
             <button type="submit" class="btn btn-primary p-1 px-3 mt-3">Edit</button>
         </form>
     </div>

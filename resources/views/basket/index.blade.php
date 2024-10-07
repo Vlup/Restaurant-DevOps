@@ -26,7 +26,7 @@ use App\Enums\OrderType;
                 </ul>
             </div> 
         @endif
-        <h1 class="mb-3">My Basket</h1>
+        <h1 class="mb-3">My Cart</h1>
         
         @if(!$hasMenu)
             <div class="alert alert-danger col-md-3 p-3" role="alert">
@@ -42,8 +42,8 @@ use App\Enums\OrderType;
                 <div class="card mb-3 border-5 border-warning" style="max-width: 700px;">
                     <div class="row g-0">
                         <div class="col-md-4 me-3 border-end border-5 border-warning">
-                            @if ($menu->image)
-                                <img src="{{ asset('storage/'. $menu->image) }}" class="img-fluid rounded-start " alt="{{ $menu->name }}">  
+                            @if ($menu->image_url)
+                                <img src="{{ $menu->image_url }}" class="img-fluid rounded-start " alt="{{ $menu->name }}">  
                             @else
                                 <img src="/image/imgNotFound.png" class="img-fluid rounded-start " alt="{{ $menu->name }}">    
                             @endif
@@ -70,7 +70,7 @@ use App\Enums\OrderType;
                                 <form action="/basket/{{ $menu->id }}" class="position-absolute top-0 end-0" method="post">
                                     @csrf
                                     @method('delete')
-                                    <button type="submit" class="btn btn-danger" style="border-top-right-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 0;" onclick="return confirm('Do you want to clear your basket?')"><span data-feather="trash-2" class="p-1"></span></button>
+                                    <button type="submit" class="btn btn-danger" style="border-top-right-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 0;" onclick="return confirm('Do you want to clear your cart?')"><span data-feather="trash-2" class="p-1"></span></button>
                                 </form>
                             </div>
                         </div>

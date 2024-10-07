@@ -20,13 +20,13 @@
                 </a>
             </li>
             <li class="nav-item mb-3">
-                <a class="nav-link" href="/order">
+                <a class="nav-link {{ Request::is('order') ? 'active' : '' }}" href="/order">
                     <span data-feather="file-text"></span>
                     Order
                 </a>
             </li>
             <li class="nav-item mb-3">
-                <a class="nav-link" href="/history">
+                <a class="nav-link {{ Request::is('history') ? 'active' : '' }}" href="/history">
                     <span data-feather="shopping-bag"></span>
                     History
                 </a>

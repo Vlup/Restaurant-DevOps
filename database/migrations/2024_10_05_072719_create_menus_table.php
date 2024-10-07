@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('image');
+            $table->string('image_url');
+            $table->string('image_path');
             $table->string('description');
             $table->string('type');
             $table->string('tag');

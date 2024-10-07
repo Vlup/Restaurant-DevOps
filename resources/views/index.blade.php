@@ -15,14 +15,14 @@
             @foreach ($menus as $menu)
                 @if ($menu->enable)
                     <div class="col-sm-3 mb-5 me-4 card border-3 border-warning" style="width: 18rem;">
-                    {{-- @if ($menu->image) --}}
-                        {{-- <img src="{{ asset('storage/'. $menu->image) }}" class="card-img-top border-bottom border-warning" alt="{{ $menu->name }}">  
-                    @else --}}
+                    @if ($menu->image_url)
+                        <img src="{{ $menu->image_url }}" class="card-img-top border-bottom border-warning" alt="{{ $menu->name }}">  
+                    @else
                         <img src="/image/imgNotFound.png" class="card-img-top border-bottom border-warning" alt="{{ $menu->name }}">    
-                    {{-- @endif --}}
+                    @endif
                     <div class="card-body">
-                        <h5 class="card-title text-center py-3">{{ $menu->name }}</h5>
-                        <p class="card-text p-2">{{ $menu->description }}</p>
+                        <h5 class="card-title text-center py-2">{{ $menu->name }}</h5>
+                        <p class="card-text px-3 mb-2">{{ $menu->description }}</p>
                     </div>
                     <ul class="list-group list-group-flush ">
                         <li class="list-group-item py-2 border-warning px-3">Price: Rp. {{number_format($menu->price)}}</li>
